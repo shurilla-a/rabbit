@@ -20,6 +20,8 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 	log.Fatalf("%s:%s", msgtoErrorLogerFile, errLogerFile)
 }
 
+// TODO нужно дописать парсинг конфига
+
 // функция генерация строки
 func RandomString(n int) string {
 	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
