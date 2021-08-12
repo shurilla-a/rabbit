@@ -10,6 +10,7 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+// функция для озаписи ошибок в лог
 func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 	fileWrite, err := os.OpenFile("errorLog.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
@@ -19,6 +20,7 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 	log.Fatalf("%s:%s", msgtoErrorLogerFile, errLogerFile)
 }
 
+// функция генерация строки
 func RandomString(n int) string {
 	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	s := make([]rune, n)
