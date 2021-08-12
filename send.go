@@ -44,6 +44,8 @@ func main() {
 	defer channel.Close()
 
 	errorLoger(err, "Failed to declare a queue")
+	//TODO Дописат много поточность
+
 	// задаем кошличество очередей и генерим имя qwerty_номер очереди
 	for i := 0; i < 5; i++ {
 
