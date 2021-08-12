@@ -2,19 +2,21 @@ package main
 
 import (
 	"log"
+	"math/rand"
+	"os"
 	"runtime"
 	"strconv"
-
-	"math/rand"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func errorLoger(err error, msg string) {
+func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
+	fileWrite, err := os.OpenFile("errorLog.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatalf("%s:%s", msg, err)
+		log.Fatalf("Error Open or Read errorLog.log File", err)
 	}
-
+	log.SetOutput(fileWrite)
+	log.Fatalf("%s:%s", msgtoErrorLogerFile, errLogerFile)
 }
 
 func RandomString(n int) string {
