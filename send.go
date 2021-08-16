@@ -6,7 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
-	"gopkg.in/yaml.v2""
+	_"gopkg.in/yaml.v2""
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -22,6 +22,12 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 
 // TODO нужно дописать парсинг конфига
 type Config struct {
+	Server struct{
+		Host string 'yaml:"host"'
+		Prot string 'yamal:"port"'
+		Login string 'yamal:"login"'
+		Password string 'yamal:"passwd"'
+	}
 	
 }
 func ConfigParsing (configFile string ){
