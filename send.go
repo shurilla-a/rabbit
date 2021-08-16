@@ -6,7 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
-
+	"gopkg.in/yaml.v2""
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -21,6 +21,14 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 }
 
 // TODO нужно дописать парсинг конфига
+type Config struct {
+	
+}
+func ConfigParsing (configFile string ){
+	configFileOpen := os.OpenFile("config.yml")
+
+}
+
 
 // функция генерация строки
 func RandomString(n int) string {
