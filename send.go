@@ -1,16 +1,14 @@
 package main
 
 import (
+	amqp "github.com/rabbitmq/amqp091-go"
+	"gopkg.in/yaml.v2"
 	"log"
 	"math/rand"
 	"os"
 	"runtime"
 	"strconv"
-	"gopkg.in/yaml.v2"
-	amqp "github.com/rabbitmq/amqp091-go"
 )
-
-
 
 // функция для озаписи ошибок в лог
 func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
@@ -25,21 +23,20 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 // TODO нужно дописать парсинг конфига
 type Config struct {
 	Server struct {
-		Host string 'yaml:"host"'
-		Prot string 'yaml:"port"'
-		Login string 'yaml:"login"'
-		Password string 'yaml:"passwd"'
-		Queue Name string 'yaml:"QueueName"'
-		Queue Messages string 'yaml:"QueueMessages"'
-		Queue Count string 'yaml:"queueCount"'
+		Host          string `yaml:"host"`
+		Prot          string `yaml:"port"`
+		Login         string `yaml:"login"`
+		Password      string `yaml:"passwd"`
+		QueueName     string `yaml:"QueueName"`
+		QueueMessages string `yaml:"QueueMessages"`
+		QueueCount    string `yaml:"queueCount"`
 	}
-	
 }
-func ConfigParsing (configFile string ){
+
+func ConfigParsing(configFile string) {
 	configFileOpen := os.OpenFile("config.yml")
 
 }
-
 
 // функция генерация строки
 func RandomString(n int) string {
