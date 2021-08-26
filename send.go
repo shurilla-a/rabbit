@@ -10,6 +10,8 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+
+
 // функция для озаписи ошибок в лог
 func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 	fileWrite, err := os.OpenFile("errorLog.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
@@ -24,12 +26,12 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 type Config struct {
 	Server struct {
 		Host string 'yaml:"host"'
-		Prot string 'yamal:"port"'
-		Login string 'yamal:"login"'
-		Password string 'yamal:"passwd"'
-		Queue Name string 'yamal:"QueueName"'
-		Queue Messages string 'yamal:"QueueMessages"'
-		Queue Count string 'yamal:"queueCount"'
+		Prot string 'yaml:"port"'
+		Login string 'yaml:"login"'
+		Password string 'yaml:"passwd"'
+		Queue Name string 'yaml:"QueueName"'
+		Queue Messages string 'yaml:"QueueMessages"'
+		Queue Count string 'yaml:"queueCount"'
 	}
 	
 }
