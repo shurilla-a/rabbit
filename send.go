@@ -60,6 +60,9 @@ func RandomString(n int) string {
 
 func main() {
 	runtime.GOMAXPROCS(2) //используем два ядра
+	// открываем Конфиг
+	configOpen, err := inConfigParsingYmal("config.ymal")
+	errorLoger(err, "Config not Found")
 
 	connect, err := amqp.Dial("amqp://user:user@!!!!!!!!!!!!!:5672")
 	errorLoger(err, "Failed to connect to RabbitMQ")
