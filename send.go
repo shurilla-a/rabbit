@@ -2,6 +2,7 @@ package main
 
 import (
 	amqp "github.com/rabbitmq/amqp091-go"
+	"gopkg.in/yaml.v2"
 	_ "gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -32,13 +33,19 @@ type ConfigYmal struct {
 	QueueCount    int    `ymal:"queueCount"`
 }
 
+// функция парсинга Ymal Файла
 func inConfigParsingYmal(configFile string) (*ConfigYmal, error) {
 	configFileOpen, err := ioutil.ReadFile("config.yml")
 	if err != nil {
 		errorLoger(err, "Cannot open Ymal File")
 		//	return nil, err
 	}
-
+	c := &ConfigYmal{}
+	err = yaml.Unmarshal(configFileOpen, c)
+	if err != nil {
+		errorLoger(err, "Cannot Parsing Ymal File")
+	}
+	return c, nil
 }
 
 // функция генерация строки
