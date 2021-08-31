@@ -2,7 +2,8 @@ package main
 
 import (
 	amqp "github.com/rabbitmq/amqp091-go"
-	"gopkg.in/yaml.v2"
+	_ "gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
 	"math/rand"
 	"os"
@@ -21,20 +22,22 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 }
 
 // TODO нужно дописать парсинг конфига
-type Config struct {
-	Server struct {
-		Host          string `yaml:"host"`
-		Prot          string `yaml:"port"`
-		Login         string `yaml:"login"`
-		Password      string `yaml:"passwd"`
-		QueueName     string `yaml:"QueueName"`
-		QueueMessages string `yaml:"QueueMessages"`
-		QueueCount    string `yaml:"queueCount"`
-	}
+type ConfigYmal struct {
+	Host          int    `yaml:"host"`
+	Prot          int    `yaml:"port"`
+	Login         string `yaml:"login"`
+	Password      string `yaml:"passwd"`
+	QueueName     string `ymal:"queueName"`
+	QueueMassages string `ymal:"queueMessages"`
+	QueueCount    int    `ymal:"queueCount"`
 }
 
-func ConfigParsing(configFile string) {
-	configFileOpen := os.OpenFile("config.yml")
+func inConfigParsingYmal(configFile string) (*ConfigYmal, error) {
+	configFileOpen, err := ioutil.ReadFile("config.yml")
+	if err != nil {
+		errorLoger(err, "Cannot open Ymal File")
+		//	return nil, err
+	}
 
 }
 
