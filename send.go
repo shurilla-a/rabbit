@@ -21,7 +21,7 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 	log.Fatalf("%s:%s", msgtoErrorLogerFile, errLogerFile)
 }
 
-// TODO нужно дописать парсинг конфига
+// структура Конфига
 type ConfigYmal struct {
 	Host          string `yaml:"host"`
 	Prot          string `yaml:"port"`
@@ -71,7 +71,7 @@ func main() {
 
 	errorLoger(err, "Failed to declare a queue")
 	//TODO Дописать много поточность
-
+	// TODO Сделать распреденеие на количество сообщений в очередях и количество очередей из конфига
 	// задаем кошличество очередей и генерим имя qwerty_номер очереди
 	for i := 0; i < 5; i++ {
 
