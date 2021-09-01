@@ -3,7 +3,6 @@ package main
 import (
 	amqp "github.com/rabbitmq/amqp091-go"
 	"gopkg.in/yaml.v2"
-	_ "gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -24,27 +23,24 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 
 // TODO нужно дописать парсинг конфига
 type ConfigYmal struct {
-	Host          int    `yaml:"host"`
-	Prot          int    `yaml:"port"`
+	Host          string `yaml:"host"`
+	Prot          string `yaml:"port"`
 	Login         string `yaml:"login"`
 	Password      string `yaml:"passwd"`
 	QueueName     string `ymal:"queueName"`
 	QueueMassages string `ymal:"queueMessages"`
-	QueueCount    int    `ymal:"queueCount"`
+	QueueCount    string `ymal:"queueCount"`
 }
 
 // функция парсинга Ymal Файла
 func inConfigParsingYmal(configFile string) (*ConfigYmal, error) {
 	configFileOpen, err := ioutil.ReadFile("config.yml")
-	if err != nil {
-		errorLoger(err, "Cannot open Ymal File")
-		//	return nil, err
-	}
+	errorLoger(err, "Cannot open Ymal File")
+	//	return nil, err
+
 	c := &ConfigYmal{}
 	err = yaml.Unmarshal(configFileOpen, c)
-	if err != nil {
-		errorLoger(err, "Cannot Parsing Ymal File")
-	}
+	errorLoger(err, "Cannot Parsing Ymal File")
 	return c, nil
 }
 
@@ -61,10 +57,11 @@ func RandomString(n int) string {
 func main() {
 	runtime.GOMAXPROCS(2) //используем два ядра
 	// открываем Конфиг
-	configOpen, err := inConfigParsingYmal("config.ymal")
+	configReader, err := inConfigParsingYmal("config.ymal")
 	errorLoger(err, "Config not Found")
 
-	connect, err := amqp.Dial("amqp://user:user@!!!!!!!!!!!!!:5672")
+	connect, err := amqp.Dial("amqp://" + configReader.Login + ":" + configReader.Password + "@" + configReader.Host + ":" + configReader.Prot)
+
 	errorLoger(err, "Failed to connect to RabbitMQ")
 	defer connect.Close()
 
