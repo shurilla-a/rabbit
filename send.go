@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -27,20 +28,26 @@ type ConfigYmal struct {
 	Prot          string `yaml:"port"`
 	Login         string `yaml:"login"`
 	Password      string `yaml:"passwd"`
-	QueueName     string `ymal:"queueName"`
-	QueueMassages string `ymal:"queueMessages"`
-	QueueCount    string `ymal:"queueCount"`
+	QueueName     string `yaml:"queueName"`
+	QueueMassages int    `yaml:"queueMessages"`
+	QueueCount    int    `yaml:"queueCount"`
 }
 
 // функция парсинга Ymal Файла
 func inConfigParsingYmal(configFile string) (*ConfigYmal, error) {
-	configFileOpen, err := ioutil.ReadFile("config.yml")
-	errorLoger(err, "Cannot open Ymal File")
-	//	return nil, err
+	configFileOpen, err := ioutil.ReadFile(configFile)
+	fmt.Println(configFile)
+
+	if err != nil {
+		errorLoger(err, "НЕ МОГУ НАЙТИ ФАЙЛ КОНФИГА")
+	}
+	//return err
 
 	c := &ConfigYmal{}
 	err = yaml.Unmarshal(configFileOpen, c)
-	errorLoger(err, "Cannot Parsing Ymal File")
+	if err != nil {
+		errorLoger(err, "Cannot Parsing Ymal File")
+	}
 	return c, nil
 }
 
@@ -55,28 +62,41 @@ func RandomString(n int) string {
 }
 
 func main() {
+
 	runtime.GOMAXPROCS(2) //используем два ядра
 	// открываем Конфиг
-	configReader, err := inConfigParsingYmal("config.ymal")
-	errorLoger(err, "Config not Found")
+	configReader, err := inConfigParsingYmal("config.yml")
+	if err != nil {
+		errorLoger(err, "Config not Found")
+	}
 
-	connect, err := amqp.Dial("amqp://" + configReader.Login + ":" + configReader.Password + "@" + configReader.Host + ":" + configReader.Prot)
+	d := "amqp://" + configReader.Login + ":" + configReader.Password + "@" + configReader.Host + ":" + configReader.Prot
+	fmt.Println(d)
+	connect, err := amqp.Dial(d)
 
-	errorLoger(err, "Failed to connect to RabbitMQ")
+	if err != nil {
+		errorLoger(err, "Failed to connect to RabbitMQ")
+	}
 	defer connect.Close()
 
 	channel, err := connect.Channel()
-	errorLoger(err, "Filed to open a channel")
+	if err != nil {
+		errorLoger(err, "Filed to open a channel")
+	}
 	defer channel.Close()
 
-	errorLoger(err, "Failed to declare a queue")
-	//TODO Дописать много поточность
+	////TODO Дописать много поточность
 	// TODO Сделать распреденеие на количество сообщений в очередях и количество очередей из конфига
-	// задаем кошличество очередей и генерим имя qwerty_номер очереди
-	for i := 0; i < 5; i++ {
 
-		queueName := "qwerty_" + strconv.Itoa(i)
+	// считаем количество сообщений в очереди
+	// QueueMassages - колличество сообщений в очереди
+	// QueueCount - количество очередей
 
+	messageCountinQueueC := configReader.QueueMassages / configReader.QueueCount
+	// задаем кошличество очередей и генерим имя и номер очереди
+	for i := 1; i <= configReader.QueueCount; i++ {
+
+		queueName := configReader.QueueName + strconv.Itoa(i)
 		queue, err := channel.QueueDeclare(
 			queueName, //Nаme
 			true,      // durable
@@ -85,8 +105,11 @@ func main() {
 			false,     // no-wait
 			nil,       // arguments
 		)
-
-		for i := 0; i < 500000; i++ {
+		if err != nil {
+			errorLoger(err, "Errr Declare Channe")
+		}
+		// количество сообщений
+		for i := 0; i < messageCountinQueueC; i++ {
 			body := RandomString(100)
 			err = channel.Publish(
 				"",         //exchange
@@ -97,8 +120,9 @@ func main() {
 					ContentType: "text/plain",
 					Body:        []byte(body),
 				})
-
-			errorLoger(err, "Failed to publish a message")
+			if err != nil {
+				errorLoger(err, "Failed to publish a message")
+			}
 			log.Printf(" [x] Sent %s", body)
 		}
 	}
