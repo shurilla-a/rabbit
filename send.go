@@ -123,7 +123,7 @@ func main() {
 			if err != nil {
 				errorLoger(err, "Failed to publish a message")
 			}
-			log.Printf(" [x] Sent %s", body)
+			//log.Printf(" [x] Sent %s", body)
 		}
 	}
 }
