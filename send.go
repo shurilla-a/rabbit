@@ -19,7 +19,7 @@ func errorLoger(errLogerFile error, msgtoErrorLogerFile string) {
 		log.Fatalf("Error Open or Read errorLog.log File", err)
 	}
 	log.SetOutput(fileWrite)
-	log.Fatalf("%s:%s", msgtoErrorLogerFile, errLogerFile)
+	log.Printf("%s:%s", msgtoErrorLogerFile, errLogerFile)
 }
 
 // структура Конфига
@@ -86,8 +86,6 @@ func main() {
 	defer channel.Close()
 
 	////TODO Дописать много поточность
-	// TODO Сделать распреденеие на количество сообщений в очередях и количество очередей из конфига
-
 	// считаем количество сообщений в очереди
 	// QueueMassages - колличество сообщений в очереди
 	// QueueCount - количество очередей
